@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+
 import './App.css';
+import TourCard from './components/TourCard';
+import Grid from '@mui/material/Grid';
+import  Container from '@mui/material/Container';
+import NavBar from './components/NavBar';
+import {useState, useEffect} from 'react';
+
+
 
 function App() {
+  const [images, setImages]= useState([]);
+  const [loading, setLoading]= useState(true);
+  useEffect(()=>{
+    fetchCats()
+
+  }, [])
+
+  const fetchCats= async () => {
+    const response = await fetch(`${process.env.REACT_APP_CAT_API_URL}`, {
+      headers: {
+        'x-api-key': process.env.REACT_APP_CAT_API_KEY
+      }
+    });
+    const data = await response.json()
+    setImages(data);
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar/>
+      
+      <Container sx={{marginTop: 13}}>
+      <Grid container spacing={3}>
+      { images.map((image) => ( <TourCard key={image.id} image={image}/>)) }
+    
+  
+      
+      </Grid>
+      </Container>
+      </>
+
+  
+      
   );
 }
 
